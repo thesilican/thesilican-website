@@ -1,13 +1,12 @@
 FROM node:lts-alpine
 
-WORKDIR /usr/src/app
+WORKDIR /app
 
-COPY package*.json /usr/src/app/
+COPY package*.json /app/
 RUN npm ci
 
-COPY . /usr/src/app/
-
+COPY . /app/
 RUN npm run build
-EXPOSE 8080
 
-CMD ["npm", "run", "start", "--", "-p", "8080"];
+EXPOSE 8080
+CMD ["node", "dist/index.js"];
