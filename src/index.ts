@@ -1,18 +1,19 @@
 import express from "express";
+import path from "path";
+import { apiRouter } from "./api";
+import env from "./env";
 
 const app = express();
 
-app.get("/api/ping", (req, res) => {
-  res.json({
-    message: "pong",
-  });
+app.use("/api", apiRouter);
+
+app.use(
+  "/latex",
+  express.static(path.join(process.cwd(), "frontend/latex/build"))
+);
+
+app.get("/", (req, res) => {
+  res.redirect("https://github.com/thesilican");
 });
 
-app.get("*", (req, res) => {
-  const path = req.path;
-  const url = new URL("https://github.com/thesilican" + path);
-  res.redirect(url.toString());
-});
-
-const PORT = process.env.PORT ?? 8080;
-app.listen(PORT, () => console.log("Listening on port", PORT));
+app.listen(env.PORT, () => console.log("Listening on port", env.PORT));
