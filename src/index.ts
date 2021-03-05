@@ -16,4 +16,17 @@ app.get("/", (req, res) => {
   res.redirect("https://github.com/thesilican");
 });
 
-app.listen(env.PORT, () => console.log("Listening on port", env.PORT));
+const server = app.listen(env.PORT, () =>
+  console.log("Listening on port", env.PORT)
+);
+
+// Handle SIGINT and SIGTERM
+let exited = false;
+const handleExit = () => {
+  if (exited) return;
+  exited = true;
+  server.close();
+  console.log("Gracefully exited");
+};
+process.on("SIGINT", handleExit);
+process.on("SIGTERM", handleExit);
