@@ -7,14 +7,20 @@ const app = express();
 
 app.use("/api", apiRouter);
 
+app.get(
+  "/",
+  express.static(path.join(process.cwd(), "frontend/homepage/build"))
+);
+
 app.use(
   "/latex",
   express.static(path.join(process.cwd(), "frontend/latex/build"))
 );
 
-app.get("/", (req, res) => {
-  res.redirect("https://github.com/thesilican");
-});
+app.use(
+  "/boggle",
+  express.static(path.join(process.cwd(), "frontend/boggle/build"))
+);
 
 const server = app.listen(env.PORT, () =>
   console.log("Listening on port", env.PORT)
