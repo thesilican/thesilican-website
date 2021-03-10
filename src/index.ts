@@ -7,7 +7,7 @@ const app = express();
 
 app.use("/api", apiRouter);
 
-app.get(
+app.use(
   "/",
   express.static(path.join(process.cwd(), "frontend/homepage/build"))
 );
@@ -15,11 +15,6 @@ app.get(
 app.use(
   "/latex",
   express.static(path.join(process.cwd(), "frontend/latex/build"))
-);
-
-app.use(
-  "/boggle",
-  express.static(path.join(process.cwd(), "frontend/boggle/build"))
 );
 
 const server = app.listen(env.PORT, () =>
