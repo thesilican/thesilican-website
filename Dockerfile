@@ -13,6 +13,9 @@ COPY frontend/latex/ /frontend/latex/
 RUN npm run build-workers
 RUN npm run build
 
+FROM node:lts as frontend-blog
+COPY frontend/blog/ /frontend/blog/
+
 FROM node:lts-alpine
 WORKDIR /app
 COPY package*.json /app/
@@ -22,6 +25,7 @@ RUN npm run build
 
 COPY --from=frontend-homepage /frontend/homepage/build/ /app/frontend/homepage/build/
 COPY --from=frontend-latex /frontend/latex/build/ /app/frontend/latex/build/
+COPY --from=frontend-blog /frontend/blog/ /app/frontend/blog/
 
 EXPOSE 8080
 CMD ["node", "dist/index.js"];

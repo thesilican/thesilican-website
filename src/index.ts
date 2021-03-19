@@ -17,6 +17,8 @@ app.use(
   express.static(path.join(process.cwd(), "frontend/latex/build"))
 );
 
+app.use("/blog", express.static(path.join(process.cwd(), "frontend/blog")));
+
 const server = app.listen(env.PORT, () =>
   console.log("Listening on port", env.PORT)
 );
