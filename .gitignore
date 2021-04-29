@@ -1,4 +1,5 @@
-node_modules/
-dist/
-tmp/
-build/
+/target/
+**/node_modules/
+**/dist/
+**/build/
+

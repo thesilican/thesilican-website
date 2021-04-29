@@ -5,27 +5,15 @@ RUN npm ci
 COPY frontend/homepage/ /frontend/homepage/
 RUN npm run build
 
-FROM node:lts as frontend-latex
-WORKDIR /frontend/latex
-COPY frontend/latex/package*.json /frontend/latex/
-RUN npm ci
-COPY frontend/latex/ /frontend/latex/
-RUN npm run build-workers
-RUN npm run build
-
-FROM node:lts as frontend-blog
-COPY frontend/blog/ /frontend/blog/
-
-FROM node:lts-alpine
+FROM rust:alpine as backend-builder
 WORKDIR /app
-COPY package*.json /app/
-RUN npm ci
-COPY . /app/
-RUN npm run build
+# Sketchy build caching
+COPY Cargo.toml Cargo.lock ./
+RUN mkdir src && echo "fn main() { println!(\"Temp\"); }" > src/main.rs && cargo build --release && rm src/main.rs
+COPY src/ ./src
+RUN touch src/main.rs && cargo build --release
 
 COPY --from=frontend-homepage /frontend/homepage/build/ /app/frontend/homepage/build/
-COPY --from=frontend-latex /frontend/latex/build/ /app/frontend/latex/build/
-COPY --from=frontend-blog /frontend/blog/ /app/frontend/blog/
 
 EXPOSE 8080
-CMD ["node", "dist/index.js"];
+CMD ["./target/release/thesilican-website"];
