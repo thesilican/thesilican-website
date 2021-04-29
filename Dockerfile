@@ -5,7 +5,7 @@ RUN npm ci
 COPY frontend/homepage/ /frontend/homepage/
 RUN npm run build
 
-FROM rust:alpine as backend-builder
+FROM rust as backend-builder
 WORKDIR /app
 # Sketchy build caching
 COPY Cargo.toml Cargo.lock ./
