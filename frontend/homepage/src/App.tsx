@@ -21,6 +21,18 @@ export default function App() {
         </a>{" "}
         while I think about what to put here
       </p>
+      <p>
+        Or, you can check out my{" "}
+        <a
+          href="https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+          target="_blank"
+          rel="noreferrer"
+        >
+          blog
+        </a>
+        , where I post things that I've been up to (mostly related to
+        programming)
+      </p>
     </StyledAppContainer>
   );
 }
