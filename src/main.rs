@@ -19,7 +19,7 @@ async fn main() -> std::io::Result<()> {
     HttpServer::new(|| {
         App::new()
             .route("/api/ping", web::get().to(api_ping))
-            .service(static_dir("/", "frontend/homepage/build"))
+            .service(static_dir("/", "frontend/homepage"))
     })
     .bind(("0.0.0.0", port))?
     .run()

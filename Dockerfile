@@ -1,9 +1,6 @@
 FROM node:lts as frontend-homepage
 WORKDIR /app/frontend/homepage
-COPY frontend/homepage/package*.json ./
-RUN npm ci
 COPY frontend/homepage/ ./
-RUN npm run build
 
 FROM rust as backend
 WORKDIR /app
@@ -15,7 +12,7 @@ RUN touch src/main.rs && cargo build --release
 
 FROM debian
 WORKDIR /app
-COPY --from=frontend-homepage /app/frontend/homepage/build/ ./frontend/homepage/build/
+COPY --from=frontend-homepage /app/frontend/homepage/ ./frontend/homepage/
 COPY --from=backend /app/target/release/thesilican-website ./thesilican-website
 
 EXPOSE 8080
