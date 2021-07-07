@@ -1,16 +1,36 @@
 <script lang="ts">
+  import type { AppState, Session, SessionOptions } from "../lib";
   import Header from "./Header.svelte";
+  import HomeView from "./Home.svelte";
+  import ResultsView from "./Results.svelte";
+  import SessionView from "./Session.svelte";
 
-  import Home from "./Home.svelte";
-  import Results from "./Results.svelte";
-  import Session from "./Session.svelte";
+  let appState: AppState = "home";
+  let sessionOptions: SessionOptions | null = null;
+  let completedSession: Session | null = null;
+
+  function handleSessionStart(e: CustomEvent<SessionOptions>) {
+    sessionOptions = e.detail;
+    appState = "session";
+  }
+  function handleSessionFinish(e: CustomEvent<Session>) {
+    completedSession = e.detail;
+    appState = "results";
+  }
+  function handleNavigateHome() {
+    appState = "home";
+  }
 </script>
 
 <div class="wrapper">
-  <Header />
-  <!-- <Home /> -->
-  <!-- <Session /> -->
-  <Results />
+  <Header {appState} on:back={handleNavigateHome} />
+  {#if appState === "home"}
+    <HomeView on:start={handleSessionStart} />
+  {:else if appState === "session"}
+    <SessionView {sessionOptions} on:finish={handleSessionFinish} />
+  {:else if appState === "results"}
+    <ResultsView session={completedSession} on:back={handleNavigateHome} />
+  {/if}
 </div>
 
 <!-- <MathPractice /> -->

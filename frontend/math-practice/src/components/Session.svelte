@@ -1,17 +1,54 @@
 <script lang="ts">
-  let progress = 10;
+  import {
+    formatMiliseconds,
+    sessionSumTime,
+    timeDiff,
+    generateSession,
+    QUESTION_TYPE_SYMBOLS,
+  } from "../lib";
+  import type { Session, SessionOptions } from "../lib";
+  import { createEventDispatcher, onMount } from "svelte";
+
+  const dispatch = createEventDispatcher<{ finish: Session }>();
+
+  export let sessionOptions: SessionOptions;
+  let session = generateSession(sessionOptions);
+  let input = "";
+  $: {
+    const currQuestion = session.questions[session.currQuestion];
+    if (parseInt(input, 10) === currQuestion.ans) {
+      setTimeout(() => {
+        input = "";
+        const elapsed = timeDiff(session.start);
+        const prev = sessionSumTime(session);
+        const time = elapsed - prev;
+        currQuestion.time = time;
+        if (session.currQuestion + 1 === session.questions.length) {
+          const seconds = formatMiliseconds(sessionSumTime(session));
+          alert(`Finished in ${seconds}`);
+          dispatch("finish", session);
+        } else {
+          session.currQuestion += 1;
+        }
+      }, 100);
+    }
+  }
+  $: currQuestion = session.questions[session.currQuestion];
+  $: progress = Math.round(
+    (100 * session.currQuestion) / (session.questions.length - 1)
+  );
+
+  function handleClearInput() {
+    input = "";
+  }
+
+  let inputBox: HTMLInputElement;
+  onMount(() => {
+    inputBox.focus();
+  });
 </script>
 
 <div class="wrapper">
-  <div class="question-answer">
-    <div class="question">
-      <div />
-      <span>12</span>
-      <span class="operator">+</span>
-      <span>12</span>
-    </div>
-    <input type="number" class="answer" />
-  </div>
   <div class="session-progress progress">
     <div
       class="progress-bar"
@@ -22,12 +59,26 @@
       aria-valuemax={100}
     />
   </div>
+  <form class="question-answer" on:submit|preventDefault={handleClearInput}>
+    <div class="question">
+      <div />
+      <span>{currQuestion.num1}</span>
+      <span class="operator">{QUESTION_TYPE_SYMBOLS[currQuestion.type]}</span>
+      <span>{currQuestion.num2}</span>
+    </div>
+    <input
+      type="number"
+      class="answer"
+      bind:value={input}
+      bind:this={inputBox}
+    />
+  </form>
 </div>
 
 <style>
   .wrapper {
     display: grid;
-    grid-template-rows: 1fr auto;
+    grid-template-rows: auto 1fr;
   }
 
   .question-answer {
@@ -56,7 +107,7 @@
     margin-bottom: 0.5rem;
   }
   .answer {
-    font-size: smaller;
+    /* font-size: smaller; */
     width: calc(15rem + 8vw);
     text-align: end;
   }
@@ -71,6 +122,7 @@
   }
 
   .session-progress {
-    margin: 0 1rem 1rem 1rem;
+    border-radius: 0;
+    margin-bottom: 1rem;
   }
 </style>
