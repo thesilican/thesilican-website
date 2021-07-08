@@ -1,6 +1,6 @@
 <script lang="ts">
   import {
-    formatMiliseconds,
+    formatMinutesSeconds,
     sessionSumTime,
     timeDiff,
     generateSession,
@@ -24,7 +24,7 @@
         const time = elapsed - prev;
         currQuestion.time = time;
         if (session.currQuestion + 1 === session.questions.length) {
-          const seconds = formatMiliseconds(sessionSumTime(session));
+          const seconds = formatMinutesSeconds(sessionSumTime(session));
           alert(`Finished in ${seconds}`);
           dispatch("finish", session);
         } else {

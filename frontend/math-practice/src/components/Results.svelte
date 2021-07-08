@@ -1,6 +1,7 @@
 <script lang="ts">
   import {
-    formatMiliseconds,
+    formatSeconds,
+    formatMinutesSeconds,
     QUESTION_DIFFICULTY_NAME,
     sessionSumTime,
     SESSION_TYPE_NAME,
@@ -13,13 +14,13 @@
   const dispatch = createEventDispatcher<{ back: null }>();
 
   export let session: Session;
-  $: totalTime = formatMiliseconds(sessionSumTime(session));
+  $: totalTime = formatMinutesSeconds(sessionSumTime(session));
   $: sessionType =
     SESSION_TYPE_NAME[session.options.type] +
     " / " +
     QUESTION_DIFFICULTY_NAME[session.options.difficulty];
   $: numQuestions = session.questions.length;
-  $: avgTime = formatMiliseconds(sessionSumTime(session) / numQuestions, 2);
+  $: avgTime = formatSeconds(sessionSumTime(session) / numQuestions);
   $: fastest = sessionExtremeTimes(session, true);
   $: slowest = sessionExtremeTimes(session, false);
 
@@ -49,7 +50,7 @@
           <span class="extremes-question"
             >{num1} {QUESTION_TYPE_SYMBOLS[type]} {num2}</span
           >
-          <span>&nbsp;- {formatMiliseconds(time)}</span>
+          <span>&nbsp;- {formatSeconds(time)}</span>
         {/each}
       </div>
       <h1>Slowest questions</h1>
@@ -58,7 +59,7 @@
           <span class="extremes-question"
             >{num1} {QUESTION_TYPE_SYMBOLS[type]} {num2}</span
           >
-          <span>&nbsp;- {formatMiliseconds(time)}</span>
+          <span>&nbsp;- {formatSeconds(time)}</span>
         {/each}
       </div>
       <button

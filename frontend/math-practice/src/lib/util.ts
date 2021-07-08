@@ -16,6 +16,14 @@ export function timeDiff(start: Date, end?: Date): number {
   return end.getTime() - start.getTime();
 }
 
-export function formatMiliseconds(miliseconds: number, sigFig = 1): string {
+export function formatSeconds(miliseconds: number, sigFig = 1): string {
   return (miliseconds / 1000).toFixed(sigFig) + "s";
+}
+
+export function formatMinutesSeconds(miliseconds: number, sigFig = 1): string {
+  const totalSeconds = miliseconds / 1000;
+  const minutes = Math.floor(totalSeconds / 60);
+  const seconds = totalSeconds % 60;
+  const padZero = seconds < 10 ? "0" : "";
+  return minutes + ":" + padZero + seconds.toFixed(sigFig);
 }

@@ -16,4 +16,4 @@ export {
   sessionExtremeTimes,
 } from "./mathsession";
 export type { AppState } from "./app";
-export { clone, timeDiff, formatMiliseconds } from "./util";
+export { clone, timeDiff, formatSeconds, formatMinutesSeconds } from "./util";
