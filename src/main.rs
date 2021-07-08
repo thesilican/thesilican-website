@@ -2,7 +2,9 @@ use actix_files as fs;
 use actix_web::{web, App, HttpResponse, HttpServer, Responder};
 
 fn static_dir(path: &str, dir: &str) -> fs::Files {
-    fs::Files::new(path, dir).index_file("index.html")
+    fs::Files::new(path, dir)
+        .index_file("index.html")
+        .redirect_to_slash_directory()
 }
 
 async fn api_ping() -> impl Responder {
