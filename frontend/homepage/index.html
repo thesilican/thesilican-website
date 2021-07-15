@@ -32,11 +32,13 @@
         while I think about what to put here
       </p>
     </main>
-    <script>
+    <script id="sneaky">
       // Hehehe
       setTimeout(() => {
         window.location.href = "https://www.youtube.com/watch?v=dQw4w9WgXcQ";
-      }, 60 * 1000);
+      }, 30 * 1000);
+      // Remove so that people are confused when using inspect element
+      document.getElementById("sneaky").remove();
     </script>
   </body>
 </html>
